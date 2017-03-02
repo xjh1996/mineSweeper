@@ -3,6 +3,7 @@ package com.xjh.player;
 import com.xjh.map.GameMap;
 import com.xjh.util.Point;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -107,7 +108,6 @@ public class Player {
                             }
                         }
                         highRateNotMinePoint.put(((double)valueInt-aroundMinePoints.size())/aroundUnknowPoints.size(),aroundUnknowPoints);
-
                     }
 
                 }
@@ -115,16 +115,19 @@ public class Player {
         }
         //System.out.println("无法推断，随机取点");
 
-
+        /**/
         if (highRateNotMinePoint.size()>0) {
             //System.out.println("最小"+highRateNotMinePoint.firstEntry().getKey());
             //System.out.println("最大"+highRateNotMinePoint.lastEntry().getKey());
             //System.out.println("地图"+((double) gameMap.getUnmarkedMineCount()) / unknowPoints.size());
+            //二选一或多选一的偶然性较大效果不是很明显也可能是因为在需要二选一时地图剩余雷数也不多了，两者概率接近
+            //二选一或多选一的概率与整体随机点的概率对比选择
             if (highRateNotMinePoint.lastEntry().getKey() - ((double)(unknowPoints.size() - gameMap.getUnmarkedMineCount())) / unknowPoints.size() > 0) {
                 Collections.shuffle(highRateNotMinePoint.lastEntry().getValue());
                 return new PlayerCommand(highRateNotMinePoint.lastEntry().getValue().subList(0, 1), CommandType.left);
             }
         }
+        /**/
         Collections.shuffle(unknowPoints);
         return new PlayerCommand(unknowPoints.subList(0,1),CommandType.left);
 
